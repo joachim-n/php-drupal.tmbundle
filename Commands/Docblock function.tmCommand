@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/usr/bin/env php
+&lt;?php
+
+/**
+ * Select the entire line of the function definition to add a docblock above it.
+ */
+
+$selected_text = $_SERVER['TM_SELECTED_TEXT'];
+
+$matches = array();
+preg_match('@^(\s*)(?:\w+ )*function (\w+)\((.*)\)@', $selected_text, $matches);
+
+// The whitespace the function is indented by.
+$indent = $matches[1];
+// The function name.
+$function_name = $matches[2];
+// The parameters.
+$function_params = $matches[3];
+
+$output = '';
+$output .= $indent . "/**\n";
+$output .= $indent . " * $function_name\n";
+$output .= $indent . " *\n";
+
+$params = explode(', ', $function_params);
+foreach ($params as $param) {
+  $output .= $indent . " * @param $param\n";
+  $output .= $indent . " *  DESC\n";
+}
+
+$output .= $indent . " *\n";
+$output .= $indent . " * @return\n";
+$output .= $indent . " *  DESC\n";
+$output .= $indent . " */\n";
+
+print $output;
+print $selected_text;</string>
+	<key>fallbackInput</key>
+	<string>document</string>
+	<key>input</key>
+	<string>selection</string>
+	<key>name</key>
+	<string>Create function docblock</string>
+	<key>output</key>
+	<string>replaceSelectedText</string>
+	<key>uuid</key>
+	<string>DFC418AB-D0EE-4760-BF14-5BCAE38FB1ED</string>
+</dict>
+</plist>
